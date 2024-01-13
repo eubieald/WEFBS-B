@@ -1,25 +1,49 @@
-const path = require("path");
-const webpack = require("webpack");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require('path'); // For working with file paths
 
+// Webpack config for development mode 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+// Webpack config
 module.exports = {
-  mode: "development",
-  devtool: "eval-cheap-module-source-map",
-  entry: {
-    main: path.resolve(process.cwd(), "src", "main.js"),
-  },
+  entry: './src/client/index.js', // Entry file
+  mode: 'development', // Mode set to development
   output: {
-    path: path.resolve(process.cwd(), "dist"),
-    publicPath: "/",
-  },
-  watchOptions: {
-    aggregateTimeout: 300,
-    poll: 500,
+    filename: 'bundle.js', // Output file
+    path: path.resolve(__dirname, 'dist'), // Output path
   },
   plugins: [
-    new webpack.ProgressPlugin(),
+    // Add your plugins here
+    // Learn more about plugins from https://webpack.js.org/configuration/plugins/
     new HtmlWebpackPlugin({
-      template: path.resolve(process.cwd(), "public", "index.html"),
+      template: './src/server/views/index.ejs',
     }),
   ],
+  module: {
+    // Add your rules for custom modules here
+    // Learn more about loaders from https://webpack.js.org/loaders/
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.ejs$/,
+        loader: 'ejs-loader',
+        options: {
+          esModule: false,
+        },
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'images',
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
