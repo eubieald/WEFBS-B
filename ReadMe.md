@@ -1,7 +1,8 @@
 # WEFBS-B (Webpack ExpressJS Firebase Bootstrap5 Sass) - Boilerplate
 
-# What I learned:
+## The objective of this project is to setup a boilerplate that bundles js,css files and whatnot as well as it uses server side data rendering using the tech stack I learned this month (January 2024).
 
+# What I learned:
 * Webpack bundler (loaders)
 * Express JS (MVC, EJS template engine, Middleware)
 * Partials
