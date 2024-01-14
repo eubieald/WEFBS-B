@@ -1,6 +1,3 @@
-// Import your styles
-import './styles.css';
-
 // Add your client-side JavaScript logic here
 document.addEventListener('DOMContentLoaded', () => {
   const appEl = document.getElementById('app');
