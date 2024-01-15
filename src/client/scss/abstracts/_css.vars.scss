@@ -1,0 +1,9 @@
+// Font Families
+$font-family-base: 'Bowlby One SC', sans-serif;
+
+:root {
+    --bs-body-font-family: #{$font-family-base};
+    @each $spacer, $value in $spacers {
+        --bs-#{$spacer}: #{$value};
+    }
+}

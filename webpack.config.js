@@ -1,5 +1,7 @@
 const path = require('path'); // For working with file paths
 
+const webpack = require('webpack'); // Webpack module
+
 // Webpack config for development mode 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -12,8 +14,8 @@ const RemovePlugin = require('remove-files-webpack-plugin');
 // Webpack config
 module.exports = {
   entry: {
-    index: './src/client/index.js',
-    style: ['./src/client/styles.scss'],
+    index: ['webpack-hot-middleware/client', './src/client/js/index.js'],
+    style: ['./src/client/scss/theme.scss'],
   },
   mode: 'development', // Mode set to development
   output: {
@@ -22,18 +24,24 @@ module.exports = {
   },
   plugins: [
     // Add your plugins here
+    // new HtmlWebpackPlugin({
+    //   template: './src/client/views/index.html',
+    //   filename: 'index.html', // Output file name in the dist folder
+    // }),
     // Learn more about plugins from https://webpack.js.org/configuration/plugins/
-    new HtmlWebpackPlugin({
-      template: './src/server/views/index.ejs', // Template file for index.ejs file
-    }),
     new MiniCssExtractPlugin({
-      filename: '[name].css', // Output file name for styles
+      filename: '[name].css',
+      chunkFilename: '[id].css',
     }),
     new RemovePlugin({
+      before: {
+        include: ['./dist/style.js'],
+      },
       after: {
         include: ['./dist/style.js'], // Remove style.js
       },
-    })
+    }),
+    new webpack.HotModuleReplacementPlugin(),
   ],
   module: {
     // Add your rules for custom modules here
@@ -42,13 +50,6 @@ module.exports = {
       {
         test: /\.s[ac]ss$/i,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'], // Use MiniCssExtractPlugin.loader and css-loader
-      },
-      {
-        test: /\.ejs$/,
-        loader: 'ejs-loader',
-        options: {
-          esModule: false,
-        },
       },
       {
         test: /\.js$/, // Apply Babel to all .js files
@@ -68,6 +69,10 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.html$/,
+        use: ['html-loader'],
+      }
     ],
   },
 };

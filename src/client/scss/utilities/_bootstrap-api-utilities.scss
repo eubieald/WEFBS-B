@@ -1,0 +1,52 @@
+// Import Bootstrap Utils so that you can amend them
+@import '~bootstrap/scss/utilities';
+
+
+/* Example custom API util */
+$utilities: map-merge(
+  $utilities,
+  (
+    // amend color to be available per state
+    "color": map-merge(
+        map-get($utilities, "color"),
+        (
+            state: hover focus active
+        )
+    ),
+
+
+    // add cursor utility
+    "cursor": (
+        property: cursor,
+        values: auto pointer grab
+    ),
+
+    // Fixed width
+    "fixed-width": (
+        property: width,
+        class: f-w,
+        values: $fixed-sizes
+    ),
+
+    // Fixed height
+    "fixed-height": (
+        property: height,
+        class: f-h,
+        values: $fixed-sizes
+    ),
+
+    // letter spacing
+    "letter-spacing": (
+        property: letter-spacing,
+        class: tracking,
+        values: $letter-spacings
+    ),
+
+    // z-index
+    "z-index": (
+        property: z-index,
+        values: $z-indexes
+    )
+
+  )
+)

@@ -1,0 +1,128 @@
+// scss-docs-start gray-color-variables
+$white:    #fff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black:    #000;
+
+// scss-docs-start color-variables
+$blue:    #0d6efd;
+$indigo:  #6610f2;
+$purple:  #6f42c1;
+$pink:    #d63384;
+$red:     #dc3545;
+$orange:  #fd7e14;
+$yellow:  #ffc107;
+$green:   #198754;
+$teal:    #20c997;
+$cyan:    #0dcaf0;
+
+$color-orangered: #ff4500;
+$color-tomato: #ff6347;
+$color-lightpink: lightpink;
+$color-lavenderblush: #fff0f5;
+$color-palelavender: purple;
+$color-green:   #198754;
+$color-japaneselaurel: #006400;
+
+
+// scss-docs-start theme-color-variables
+$primary-color:       $color-lightpink;
+$secondary-color: $color-tomato;
+$tertiary-color: $color-orangered;
+$success:       $color-green;
+
+// $primary:       $blue;
+// $secondary:     $gray-600;
+// $success:       $green;
+// $info:          $cyan;
+// $warning:       $yellow;
+// $danger:        $red;
+// $light:         $gray-100;
+// $dark:          $gray-900;
+
+// Settings for the `<body>` element.
+// $body-bg:                   $white;
+// $body-color:                $gray-900;
+// $border-color:                $gray-300;
+// $text-muted:                  $gray-600;
+
+$font-size-base: 1.2rem;
+$line-height-base: 1.65;
+$enable-negative-margins: true;
+
+
+// scss-docs-start box-shadow-variables
+$box-shadow:                  0 .5rem 1rem rgba($black, .15);
+$box-shadow-sm:               0 .125rem .25rem rgba($black, .075);
+$box-shadow-lg:               0 1rem 3rem rgba($black, .175);
+$box-shadow-inset:            inset 0 1px 2px rgba($black, .075);
+
+// API Util vars
+// Fixed sizing
+$fixed-sizes: (
+	0: 0,
+    1: .25rem,
+    2: .5rem,
+    3: .75rem,
+    4: 1rem,
+    5: 1.25rem,
+    6: 1.5rem,
+    7: 1.75rem,
+    8: 2rem,
+    9: 2.25rem,
+    10: 2.5rem,
+    12: 3rem,
+    14: 3.5rem,
+    16: 4rem,
+    20: 5rem,
+    24: 6rem,
+    28: 7rem,
+    30: 7.25rem,
+    32: 8rem,
+    36: 9rem,
+    40: 10rem,
+    44: 11rem,
+    48: 12rem,
+    52: 15rem,
+    56: 18rem,
+    60: 21rem,
+    64: 24rem,
+    68: 27rem,
+    72: 30rem,
+    76: 33rem,
+    80: 36rem,
+    84: 40rem,
+    88: 44rem,
+    92: 50rem,
+    96: 56rem,
+    100: 60rem
+);
+
+
+// letter spacings
+$letter-spacings: (
+  'tighter': -0.05em,
+  'tight': -0.025em,
+  'wide': 0.065em,
+  'wider': 0.25em,
+  'widest': 0.4em
+);
+
+// z-index
+$z-indexes: (
+    'n1': -1,
+    '0': 0,
+    '1': 1,
+    '10': 10,
+    '20': 20,
+    '30': 30,
+    '40': 40,
+    '50': 50,
+)

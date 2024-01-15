@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+{{> partials/head }}
+<body>
+    <!-- Your main content -->
+    <h1>{{ title }}</h1>
+
+    <section class="login-register">
+        <div class="container">
+            <div class="row two-columns">
+                {{> partials/forms/login }}
+                {{> partials/forms/registration }}
+            </div>
+        </div>
+    </section>
+</body>
+<script src="/dist/index.js"></script>
+
+{{> partials/footer }}
+</html>
