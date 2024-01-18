@@ -1,0 +1,116 @@
+const path = require('path'); // For working with file paths
+
+const webpack = require('webpack'); // Webpack module
+
+// Webpack config for development mode 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+// Webpack config for production mode
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+// Remove files from webpack build folder when webpack is run in production mode
+const RemovePlugin = require('remove-files-webpack-plugin');
+
+// Load environment variables
+const Dotenv = require('dotenv-webpack');
+
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+// Webpack config
+module.exports = {
+  mode: 'development', // Mode set to development
+  entry: {
+    index: './src/client/js/index.js',
+    style: './src/client/scss/theme.scss',
+  },
+  output: {
+    filename: '[name].js', // Output file
+    path: path.resolve(__dirname, 'dist'),
+  },
+  resolve: {
+    alias: {
+      // Ensure there is an alias for 'firebase-config' pointing to the correct file
+      'firebaseconfig': path.resolve(__dirname, 'firebase.config.js'),
+    },
+  },
+  // stats: {
+  //   children: true,
+  // },
+  plugins: [
+    // Add your plugins here
+    new HtmlWebpackPlugin({
+      template: './src/views/index.html'
+    }),
+    new webpack.HotModuleReplacementPlugin(),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[id].css',
+    }),
+    new RemovePlugin({
+      before: {
+        include: ['./dist/style.js'],
+      },
+      after: {
+        include: ['./dist/style.js'], // Remove style.js
+      },
+    }),
+    new Dotenv(),
+    // new HtmlWebpackPlugin({
+    //   template: './src/views/index.ejs',
+    //   filename: 'index.html', // Output file name in the dist folder
+    // })
+    // new CopyWebpackPlugin({
+    //   patterns: [
+    //     { from: './src/views/index.html', to: 'index.html'},
+    //   ],
+    // }),
+  ],
+  module: {
+    // Add your rules for custom modules here
+    // Learn more about loaders from https://webpack.js.org/loaders/
+    rules: [
+      {
+        test: /\.s[ac]ss$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'], // Use MiniCssExtractPlugin.loader and css-loader
+      },
+      {
+        test: /\.js$/, // Apply Babel to all .js files
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+        },
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'images',
+            },
+          },
+        ],
+      },
+      // {
+      //   test: /\.ejs$/,
+      //   loader: 'ejs-loader',
+      //   options: {
+      //     esModule: false,
+      //     variable: 'data',
+      //   },
+      // },
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: 'html-loader',
+            options: {
+              esModule: false,
+              variable: 'data',
+            }
+          }
+        ],
+      }
+    ],
+  },
+};
