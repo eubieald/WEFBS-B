@@ -9,12 +9,13 @@ const bodyParser = require('body-parser');
 const webpackConfig = require("../../webpack.config");
 const admin = require('firebase-admin');
 const crypto = require('crypto');
-const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const viewsDirectory = path.join(__dirname, "../client/views");
 const compiler = webpack(webpackConfig);
+
+const userRoutes = require("../routes/userRoutes");
 
 // Generate a secure random string for the session secret
 const sessionSecret = crypto.randomBytes(32).toString('hex');
@@ -65,66 +66,10 @@ app.use(session({
   cookie: { secure: false },
 }));
 
-// Middleware to check if the user is authenticated
-const isAuthenticated = (req, res, next) => {
-  // Initialize user object if not present
-  req.session.user = req.session.user || {};
-
-  // Check if the user is authenticated based on the session
-  if (req.session && req.session.user && req.session.user.uid) {
-    next();
-  } else {
-    // User is not authenticated, redirect to login page or handle as needed
-    res.redirect('/'); // Adjust the route to your login page
-  }
-};
-
 // Initialize Firebase, and start the server when initialization is complete
 initializeFirebase().then(() => {
-  // Handle login form submission
-  app.post("/login", bodyParser.urlencoded({ extended: true }), async (req, res) => {
-    const { idToken } = req.body;
-
-    try {
-      // Verify the ID token
-      const decodedToken = await admin.auth().verifyIdToken(idToken);
-      const { uid, email } = decodedToken;
-
-      // Set user in session
-      req.session.user = { uid, email };
-
-      // Redirect to dashboard
-      res.redirect('/dashboard');
-    } catch (error) {
-      console.error('Authentication error:', error.message);
-      res.status(401).json({ error: 'Authentication failed' });
-    }
-  });
-
-  // Dashboard page accessible only to authenticated users
-  app.get("/dashboard", isAuthenticated, (req, res) => {
-    const { email } = req.session.user;
-
-    res.render("dashboard", {
-      title: "Dashboard",
-      user: { email },
-    });
-  });
-
-  // Handle logout
-  app.post("/logout", (req, res) => {
-    // Destroy the session
-    req.session.destroy(err => {
-      if (err) {
-        console.error('Error destroying session:', err);
-        res.status(500).json({ error: 'Internal Server Error' });
-      } else {
-        // Redirect to the home page or any other page after logout
-        res.redirect('/');
-      }
-    });
-  });
-
+  // 7. Routes
+  app.use(userRoutes);
   // Other routes...
   app.get("/", (req, res) => {
     // check if session has user object
@@ -137,10 +82,31 @@ initializeFirebase().then(() => {
     }
   });
 
-  // 6. Server Listening
-  app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  app.get("/about", (req, res) => {
+    res.render("about", {
+      title: "About Page",
+    });
   });
+
+  app.get("/page-not-found", (req, res, next) => {
+    res.status(404).render("404", {
+      title: "404",
+      message: "Page Not Found",
+    });
+  })
+
+  app.use((req, res) => {
+    res.status(404).render("404", {
+      title: "404",
+      message: "Page Not Found",
+    });
+  })
 }).catch(error => {
   console.error('Firebase initialization error:', error);
 });
+
+ // 6. Server Listening
+ app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
+

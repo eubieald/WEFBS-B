@@ -1,3 +1,23 @@
+.toast {
+    &-container {
+        width: 100%;
+        margin-top: 2%;
+    }
+
+    &-header {
+        background-color: $color-lightseagreen;
+    }
+}
+
+.fade {
+    opacity: 0;
+    transition: opacity 0.15s linear;
+}
+
+.fade.show {
+    opacity: 1;
+}
+
 section.login-register {
     legend {
         font-size: 50px;
