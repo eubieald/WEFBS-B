@@ -20,9 +20,7 @@ const login_post = async (req, res) => {
     // Verify the ID token
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     const { uid, email, name } = decodedToken;
-
-    console.log(decodedToken);
-
+    
     // Set user in session
     req.session.user = { uid, email, name };
 
