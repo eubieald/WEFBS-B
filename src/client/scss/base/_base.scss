@@ -1,22 +1,36 @@
-.toast {
-    &-container {
-        width: 100%;
-        margin-top: 2%;
+#toast-container {
+    width: 100%;
+    margin-top: 2%;
+    
+    .bg-success  {
+        .toast-header {
+            background-color: $color-lightseagreen;
+        }
+
+        .toast-body {
+            background-color: var(--bs-teal);
+        }
     }
 
-    &-header {
-        background-color: $color-lightseagreen;
+    .bg-error {
+        background-color: var(--bs-danger);
+        
+        .toast-body {
+            background-color: $color-lightcoral;
+        }
+    }
+
+    .fade {
+        opacity: 0;
+        transition: opacity 0.15s linear;
+    }
+    
+    .fade.show {
+        opacity: 1;
     }
 }
 
-.fade {
-    opacity: 0;
-    transition: opacity 0.15s linear;
-}
 
-.fade.show {
-    opacity: 1;
-}
 
 section.login-register {
     legend {

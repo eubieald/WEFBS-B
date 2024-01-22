@@ -1,4 +1,4 @@
 // Components
 import 'bootstrap';
-import './components/firebase';
+import './firebase-user-auth';
 import './components/toast';

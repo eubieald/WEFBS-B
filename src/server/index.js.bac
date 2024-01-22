@@ -1,0 +1,127 @@
+const express = require("express");
+const path = require("path");
+const webpack = require("webpack");
+const webpackDevMiddleware = require("webpack-dev-middleware");
+const webpackHotMiddleware = require("webpack-hot-middleware");
+const mustacheExpress = require("mustache-express");
+const bodyParser = require('body-parser');
+const webpackConfig = require("../../webpack.config");
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+const viewsDirectory = path.join(__dirname, "../client/views");
+const compiler = webpack(webpackConfig);
+
+const fs = require('fs');
+
+const admin = require('firebase-admin');
+
+
+// 1. View Engine and Partial Registration
+app.engine("html", mustacheExpress());
+app.set("view engine", "html");
+app.set("views", viewsDirectory);
+
+// 2. Static Files
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// 3. Webpack Middleware
+app.use(
+  webpackDevMiddleware(compiler, {
+    publicPath: webpackConfig.output.publicPath,
+  })
+);
+
+app.use(webpackHotMiddleware(compiler));
+app.use(bodyParser.json());
+
+// 4. Firebase Admin
+// Require the service account key JS file
+const jsonString = fs.readFileSync('service-account.json', 'utf-8');
+const configData = JSON.parse(jsonString);
+
+admin.initializeApp({
+  credential: admin.credential.cert(configData),
+  // Add your databaseURL
+  databaseURL: configData.databaseURL,
+});
+
+// Middleware to check if the user is authenticated
+const isAuthenticated = (req, res, next) => {
+  const idToken = req.header('Authorization');
+
+  if (!idToken) {
+    return res.redirect('/');
+  }
+
+  admin.auth().verifyIdToken(idToken)
+    .then((decodedToken) => {
+      req.user = decodedToken;
+      next();
+    })
+    .catch(() => {
+      return res.redirect('/');
+    });
+};
+
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+
+  console.log(email, password);
+
+  admin.auth().getUserByEmail(email)
+    .then((userRecord) => {
+      // User exists, check the password or other authentication logic here
+      // Note: You might want to use a third-party authentication library for more secure password handling
+
+      // For simplicity, we're just assuming the password is correct
+      const uid = userRecord.uid;
+
+      // Create a custom token and send it to the client
+      admin.auth().createCustomToken(uid)
+        .then((customToken) => {
+          // Send the custom token to the client, and use it for authentication on the client side
+          res.redirect('/dashboard');
+        })
+        .catch((error) => {
+          console.error('Error creating custom token:', error);
+          res.render('/', { error: 'Authentication failed' });
+        });
+    })
+    .catch((error) => {
+      console.error('Error getting user by email:', error);
+      res.render('index', { error: 'User not found' });
+    });
+});
+
+app.get('/dashboard', isAuthenticated, (req, res) => {
+  res.render('dashboard', { user: req.user });
+});
+
+// 5. Route Handlers
+app.use((req, res, next) => {
+  res.locals.year = new Date().getFullYear();
+  next();
+});
+
+app.get('/', (req, res) => {
+  res.render("index", {
+    title: "Home Page",
+  });
+});
+
+app.get("/about", (req, res) => {
+  res.render("about", {
+    title: "About Page",
+  });
+});
+
+// 6. Error Handling
+app.use((req, res) => {
+  res.status(404).render("404", { title: "404", message: "Page Not Found" });
+});
+
+// 7. Server Listening
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});

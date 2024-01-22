@@ -1,24 +1,38 @@
-const express = require("express");
-const session = require("express-session");
+// Filesystem related imports
 const path = require("path");
-const webpack = require("webpack");
-const webpackDevMiddleware = require("webpack-dev-middleware");
-const webpackHotMiddleware = require("webpack-hot-middleware");
-const mustacheExpress = require("mustache-express");
-const bodyParser = require("body-parser");
-const webpackConfig = require("../../webpack.config");
-const admin = require("firebase-admin");
-const crypto = require("crypto");
 
+// Express related imports for server
+const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
-const viewsDirectory = path.join(__dirname, "../client/views");
+
+// Body Parser imports
+const bodyParser = require("body-parser");
+
+// Webpack Related imports
+const webpack = require("webpack");
+const webpackConfig = require("../../webpack.config");
 const compiler = webpack(webpackConfig);
+const webpackDevMiddleware = require("webpack-dev-middleware");
+const webpackHotMiddleware = require("webpack-hot-middleware");
 
-const userRoutes = require("../routes/userRoutes");
+// Firebase Admin Initialization imports
+const admin = require("firebase-admin");
 
-// Generate a secure random string for the session secret
+// Template Engine related imports
+const mustacheExpress = require("mustache-express");
+const viewsDirectory = path.join(__dirname, "../views");
+
+// Session Related import
+const session = require("express-session");
+const crypto = require("crypto");
 const sessionSecret = crypto.randomBytes(32).toString("hex");
+
+// User Routes Import
+const userRoutes = require("../routes/user-route");
+
+// CSRF related imports
+const cookieParser = require("cookie-parser");
 
 // 1. View Engine and Partial Registration
 app.engine("html", mustacheExpress());
@@ -28,15 +42,35 @@ app.set("views", viewsDirectory);
 // 2. Static Files
 app.use(express.static(path.join(__dirname, "dist")));
 
-// 3. Webpack Middleware
+// 3.  Middleware
+// Todo: CSRF Middleware Protection
+app.use(cookieParser());
+
+
+// Webpack Middleware
 app.use(
   webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
   })
 );
-
 app.use(webpackHotMiddleware(compiler));
 app.use(bodyParser.json());
+
+// Session Middleware
+app.use(
+  session({
+    secret: sessionSecret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+  })
+);
+
+// Set Global Variables available to templates
+app.use((req, res, next) => {
+  res.locals.copyrightYear = new Date().getFullYear();
+  next();
+});
 
 // 4. Firebase Admin Initialization
 const getConfigData = require("../../service-account.config");
@@ -58,39 +92,29 @@ const initializeFirebase = () => {
   });
 };
 
-// 5. Session Middleware
-app.use(
-  session({
-    secret: sessionSecret,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false },
-  })
-);
-
-app.use((req, res, next) => {
-  res.locals.copyrightYear = new Date().getFullYear();
-  next();
-});
-
-// Initialize Firebase, and start the server when initialization is complete
+// 5. Initialize Firebase, and start the server when initialization is complete
 initializeFirebase()
   .then(() => {
-    // 7. User Routes
+    // Register User Routes
     app.use(userRoutes);
 
     app.get("/", (req, res) => {
+
+      //Todo: CSRF Token
+      // const csrfToken = res.locals.csrfToken;
+      // console.log('from server / csrfToken', csrfToken);
+      // console.log('to be passed to template', csrfToken);
+
       // check if session has user object
       if (req.session && req.session.user && req.session.user.uid) {
-        return res.redirect("/dashboard");
+        res.redirect("/dashboard");
       } else {
         res.render("index", {
           title: "Home Page",
+          // csrfToken, // Add the CSRF token
         });
       }
     });
-
-    // Other routes...
 
     app.get("/about", (req, res) => {
       res.render("about", {
@@ -98,12 +122,12 @@ initializeFirebase()
       });
     });
 
-    app.get("/page-not-found", (req, res, next) => {
+    app.get("/404", (req, res) => {
       res.status(404).render("404", {
         title: "404",
         message: "Page Not Found",
       });
-    });
+    })
 
     app.use((req, res) => {
       res.status(404).render("404", {
