@@ -1,5 +1,13 @@
 const admin = require("firebase-admin");
 
+/**
+ * Check if the user is authenticated based on the session.
+ *
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ * @param {Function} next - The next middleware function
+ * @return {void} 
+ */
 const isAuthenticated = (req, res, next) => {
   // Initialize user object if not present
   req.session.user = req.session.user || {};
@@ -10,10 +18,19 @@ const isAuthenticated = (req, res, next) => {
     next();
   } else {
     // User is not authenticated
-    res.redirect("/404");
+    res.redirect("/page-not-found");
   }
 };
 
+/**
+ * Handles the POST request for user login. Verifies the CSRF token and ID token,
+ * sets the user in the session, and redirects to the dashboard upon successful
+ * authentication. Handles authentication errors by returning an error response.
+ *
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ * @return {Promise<void>} - A promise that resolves when the function completes
+ */
 const login_post = async (req, res) => {
   const { idToken } = req.body;
 
@@ -39,17 +56,31 @@ const login_post = async (req, res) => {
   }
 };
 
+/**
+ * Get dashboard data and render the dashboard page.
+ *
+ * @param {object} req - the request object
+ * @param {object} res - the response object
+ * @return {void} 
+ */
 const dashboard_get = (req, res) => {
   // set cache control
   res.setHeader("Cache-Control", "no-store", "must-revalidate", "private");
 
   const { email, name } = req.session.user;
   res.render("dashboard", {
-    title: "Dashboard",
+    title: "dashboard",
     user: { email, name },
   });
 };
 
+/**
+ * Destroy the session.
+ *
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ * @return {undefined} No return value
+ */
 const logout_post = (req, res) => {
   // Destroy the session
   req.session.destroy((err) => {

@@ -1,7 +1,11 @@
 // Font Families
-$font-family-base: 'Bowlby One SC', sans-serif;
+$font-family-base: 'Mohave', sans-serif;
+
+$body-bg: $color-dark-gunmetal;
 
 :root {
+    --bs-body-bg: #{$body-bg};
+    
     --bs-body-font-family: #{$font-family-base};
     @each $spacer, $value in $spacers {
         --bs-#{$spacer}: #{$value};

@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
   signOut,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 
 import firebaseConfig from "@firebase.config";
@@ -25,7 +26,6 @@ const auth = getAuth();
 export const registerUser = async (email, password, name) => {
   try {
     const response = await createUserWithEmailAndPassword(auth, email, password);
-    console.log(response);
 
     // Assuming you have successfully obtained the user from the response
     const user = response.user;
@@ -61,6 +61,18 @@ export const loginUser = async (email, password) => {
     throw error;
   }
 };
+
+export const resetUserPassword = async (email) => {
+  sendPasswordResetEmail(auth, email)
+    .then(() => {
+      showToastNotification("Password reset email sent", "success");
+    })
+    .catch((error) => {
+      error = getErrorMessage(error);
+      showToastNotification(error, "error");
+      throw error;
+    })
+}
 
 /**
  * Get error message from Firebase error or return the error itself.

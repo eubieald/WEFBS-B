@@ -1,6 +1,10 @@
-import { registerUser, loginUser } from "../../models/firebase-user-model";
+import {
+  registerUser,
+  loginUser,
+  resetUserPassword,
+} from "../../../models/firebase-user-model";
 
-import showToastNotification from "./components/toast"; // Import showToast as the default export
+import showToastNotification from "./toast"; // Import showToast as the default export
 
 // Event Handlers
 document.addEventListener("DOMContentLoaded", function () {
@@ -24,7 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   } catch (error) {
-    showToastNotification(error.message, "error");
+    showToastNotification(error, "error");
+    throw error;
   }
 
   // Login a user
@@ -47,13 +52,27 @@ document.addEventListener("DOMContentLoaded", function () {
           window.location.href = "/dashboard";
         })
         .catch((error) => {
-          showToastNotification(error.message, "error");
+          showToastNotification(error, "error");
+          throw error;
         });
     });
   } catch (error) {
-    showToastNotification(error.message, "error");
+    showToastNotification(error, "error");
+    throw error;
   }
 });
+
+// Reset user password
+const forgotPasswordEl = document.querySelector(".forgot-password");
+forgotPasswordEl.addEventListener("click", async (e) => {
+  e.preventDefault();
+  const loginForm = document.querySelector("#login-form"),
+    email = loginForm.email.value;
+
+    await resetUserPassword(email);
+});
+
+// FUNCTIONS
 
 /**
  * Authenticates a user using email and password.
@@ -88,8 +107,8 @@ function authenticateUser(email, password) {
         reject("Authentication failed");
       }
     } catch (error) {
-      showToastNotification(error.message, "error");
-      reject(errorMessage);
+      showToastNotification(error, "error");
+      reject(error);
     }
   });
 }

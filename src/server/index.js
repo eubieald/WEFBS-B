@@ -34,6 +34,9 @@ const userRoutes = require("../routes/user-route");
 // CSRF related imports
 const cookieParser = require("cookie-parser");
 
+// Date related imports
+const moment = require('moment');
+
 // 1. View Engine and Partial Registration
 app.engine("html", mustacheExpress());
 app.set("view engine", "html");
@@ -68,7 +71,7 @@ app.use(
 
 // Set Global Variables available to templates
 app.use((req, res, next) => {
-  res.locals.copyrightYear = new Date().getFullYear();
+  res.locals.copyrightYear = moment().year();
   next();
 });
 
@@ -111,7 +114,7 @@ initializeFirebase()
       } else {
         res.render("index", {
           title: "Home Page",
-          // csrfToken, // Add the CSRF token
+                    // csrfToken, // Add the CSRF token
         });
       }
     });
@@ -122,23 +125,37 @@ initializeFirebase()
       });
     });
 
-    app.get("/404", (req, res) => {
+    app.get("/page-not-found", (req, res) => {
+      let goBackUrl = getBackUrl(req.session);
+
       res.status(404).render("404", {
         title: "404",
         message: "Page Not Found",
+        goBackUrl,
       });
     })
 
     app.use((req, res) => {
+      let goBackUrl = getBackUrl(req.session);
+
       res.status(404).render("404", {
         title: "404",
         message: "Page Not Found",
+        goBackUrl
       });
     });
   })
   .catch((error) => {
     console.error("Firebase initialization error:", error);
   });
+
+  const getBackUrl = (session) => {
+    if (session && session.user && session.user.uid) {
+      return "/dashboard";
+    } else {
+      return "/";
+    }
+  }
 
 // 6. Server Listening
 app.listen(PORT, () => {

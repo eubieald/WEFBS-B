@@ -3,9 +3,11 @@
 <html lang="en">
 {{> partials/head}}
 <body>
-    <main class="error-page text-center mt-10 fs-1">
-        <h1>{{title}}</h1>
+    {{> partials/page-title}}
+    <section class="text-center fs-1">
         <p>{{message}}</p>
-    </main>
+
+        <a href="{{goBackUrl}}" class="btn anchor-primary">Go Back to Previous Page</a>
+    </section>
 </body>
 </html>

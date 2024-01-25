@@ -43,12 +43,17 @@ const showToastNotification = (message, type = "success") => {
 
     // Hide the toast when the user hovers over it
     toastElement.addEventListener("mouseover", () => {
-      bsToast.hide(); // Hide the toast
+      if (bsToast.isShown) {
+        bsToast.hide(); // Hide the toast
+      }
     });
 
     // Dispose of the toast after it's hidden
     toastElement.addEventListener("hidden.bs.toast", () => {
-      bsToast.dispose(); // Dispose of the Toast instance
+      if (bsToast.isShown === false) {
+        bsToast.dispose();
+      }
+      toastContainer.innerHTML = "";
     });
   }
 };

@@ -1,3 +1,5 @@
+// COMPONENTS: TOAST
+
 #toast-container {
     width: 100%;
     margin-top: 2%;
@@ -30,7 +32,34 @@
     }
 }
 
+// GLOBALS
 
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+
+section,
+main {
+    flex: 1;
+}
+
+button.btn-primary {
+    border-radius: 5px;
+    background: $color-dark-gunmetal;
+    color: $color-inchworm;
+}
+
+.anchor-primary {
+    border-radius: 5px;
+    background: $color-inchworm;
+    color: $color-dark-gunmetal;
+}
+
+// BODY
 
 section.login-register {
     legend {
@@ -38,7 +67,6 @@ section.login-register {
         font-weight: $font-weight-bolder;
         text-align: center;
         letter-spacing: 5px;
-        color: white;
     }
 
     label {
@@ -59,28 +87,19 @@ section.login-register {
         padding: 10px;
         margin-bottom: 20px;
         border-width: 0;
-        border-radius: 5px;
-        font-size: 16px;
-
-        // placeholder text center
-        &::placeholder {
-            // padding-left: 10px;
-        }
+        border-radius: 20px;
+        font-size: 20px;
+        background-color: $color-steel-blue;
 
         &:focus {
-            outline-color: $color-japaneselaurel;
+            outline-color: $color-dark-gunmetal;
         }
-    }
-
-    button {
-        border-radius: 5px;
-        background: lavenderblush;
-        color: $color-japaneselaurel;
     }
 
     a,
     input::placeholder {
-        font-size: 12px;
+        font-size: 20px;
+        color: white;
     }
 
     .container {
@@ -92,41 +111,91 @@ section.login-register {
         height: 100vh;
 
         >.row {
-            max-width: 896px;
             padding: 20px;
             box-sizing: border-box;
 
             &.two-columns {
+                width: 631px;
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                column-gap: 20px;
+                column-gap: 16px;
                 gap: 20px;
             }
         }
 
         .login-container,
         .register-container {
-            border-radius: 5px;
+            border-radius: 25px;
         }
 
         .login-container {
-            background-color: $primary-color;
+            background-color: $color-eternity;
+
+            legend {
+                color: $color-inchworm;
+            }
 
             input {
-                color: $primary-color;
+                color:white;
             }
 
             .forgot-password {
+                padding-left: 3px;
                 color: $color-orangered;
             }
         }
 
         .register-container {
-            background-color: $secondary-color;
+            background-color: $color-inchworm;
+
+            legend {
+                color: $color-eternity;
+            }
 
             input {
-                color: $secondary-color;
+                color: white;
             }
         }
     }
+}
+
+// PAGE: DASHBOARD
+.page-title {
+    &.dashboard {
+        height: 0;
+        visibility: hidden;
+    
+        & + main {
+            color: white;
+        }
+    }
+}
+
+// PAGE: 404
+div[class="page-title 404"] {
+    color: $color-inchworm;
+    text-align: center;
+    margin-top: 20vh;
+
+    & + section {
+        color: white;
+
+        a {
+            padding: 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            text-decoration: none;
+        }
+    }
+    
+    > h1 {
+        font-size: 150px;
+    }
+}
+
+
+// FOOTER
+
+footer {
+    color: $color-inchworm;
 }
