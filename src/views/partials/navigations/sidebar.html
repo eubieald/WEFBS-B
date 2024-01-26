@@ -1,0 +1,44 @@
+<div class="sidebar">
+    <div class="brand">
+        <p>L<span>OGO</span></p>
+    </div>
+    <ul class="nav-list">
+        <li class="nav-item">
+            <a href="#">
+                <span class="nav-item__icon">
+                    <ion-icon name="home-outline"></ion-icon>
+                </span>
+                <span class="nav-item__text">
+                    Home
+                </span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#">
+                <span class="nav-item__icon">
+                    <ion-icon name="about-outline"></ion-icon>
+                </span>
+                <span class="nav-item__text">
+                    About
+                </span>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav-list">
+        <li class="nav-item">
+            <a href="#">
+                <span class="nav-item__icon avatar">{{user.avatar}}</span>
+                <span class="nav-item__text">
+                    {{user.name}}
+                </span>
+            </a>
+        </li>
+        <li class="nav-item">
+            {{> partials/forms/logout}}
+        </li>
+    </ul>
+</div>
+
+<script>
+    console.log(user.name);
+</script>

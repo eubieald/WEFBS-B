@@ -1,0 +1,15 @@
+// PAGE: DASHBOARD
+div[class="page-title Dashboard"] {
+    height: 0;
+    visibility: hidden;
+
+    &+main {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        margin-left: 100px;
+        margin-top: 50px;
+        color: white;
+    }
+
+}

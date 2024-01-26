@@ -1,0 +1,37 @@
+$color-success-header: $color-lightseagreen;
+$color-success-body: var(--bs-teal);
+
+$color-error-header: var(--bs-danger);
+$color-error-body: $color-lightcoral;
+
+#toast-container {
+    width: 100%;
+    margin-top: 2%;
+    
+    .bg-success  {
+        .toast-header {
+            background-color: $color-success-header;
+        }
+
+        .toast-body {
+            background-color: $color-success-body;
+        }
+    }
+
+    .bg-error {
+        background-color: $color-error-header;
+        
+        .toast-body {
+            background-color: $color-error-body;
+        }
+    }
+
+    .fade {
+        opacity: 0;
+        transition: opacity 0.15s linear;
+    }
+    
+    .fade.show {
+        opacity: 1;
+    }
+}

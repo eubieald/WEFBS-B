@@ -69,8 +69,8 @@ const dashboard_get = (req, res) => {
 
   const { email, name } = req.session.user;
   res.render("dashboard", {
-    title: "dashboard",
-    user: { email, name },
+    title: "Dashboard",
+    user: { email, name, avatar: name[0] },
   });
 };
 

@@ -49,6 +49,7 @@ const showToastNotification = (message, type = "success") => {
     });
 
     // Dispose of the toast after it's hidden
+    // Remove the toast element from the container
     toastElement.addEventListener("hidden.bs.toast", () => {
       if (bsToast.isShown === false) {
         bsToast.dispose();

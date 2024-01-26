@@ -68,7 +68,6 @@ forgotPasswordEl.addEventListener("click", async (e) => {
   e.preventDefault();
   const loginForm = document.querySelector("#login-form"),
     email = loginForm.email.value;
-
     await resetUserPassword(email);
 });
 

@@ -1,0 +1,21 @@
+// PAGE: 404
+div[class="page-title 404"] {
+    color: $color-inchworm;
+    text-align: center;
+    margin-top: 20vh;
+
+    & + section {
+        color: white;
+
+        a {
+            padding: 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            text-decoration: none;
+        }
+    }
+    
+    > h1 {
+        font-size: 150px;
+    }
+}

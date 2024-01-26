@@ -1,39 +1,13 @@
-// COMPONENTS: TOAST
+// Components
+@import './components/toast.scss';
+@import './components/login-register.scss';
+@import './components/sidebar.scss';
 
-#toast-container {
-    width: 100%;
-    margin-top: 2%;
-    
-    .bg-success  {
-        .toast-header {
-            background-color: $color-lightseagreen;
-        }
-
-        .toast-body {
-            background-color: var(--bs-teal);
-        }
-    }
-
-    .bg-error {
-        background-color: var(--bs-danger);
-        
-        .toast-body {
-            background-color: $color-lightcoral;
-        }
-    }
-
-    .fade {
-        opacity: 0;
-        transition: opacity 0.15s linear;
-    }
-    
-    .fade.show {
-        opacity: 1;
-    }
-}
+// Pages
+@import './pages/dashboard.scss';
+@import './pages/404.scss';
 
 // GLOBALS
-
 body {
     display: flex;
     flex-direction: column;
@@ -48,7 +22,8 @@ main {
 }
 
 button.btn-primary {
-    border-radius: 5px;
+    padding: 5px 15px;
+    border-radius: 20px;
     background: $color-dark-gunmetal;
     color: $color-inchworm;
 }
@@ -58,143 +33,6 @@ button.btn-primary {
     background: $color-inchworm;
     color: $color-dark-gunmetal;
 }
-
-// BODY
-
-section.login-register {
-    legend {
-        font-size: 50px;
-        font-weight: $font-weight-bolder;
-        text-align: center;
-        letter-spacing: 5px;
-    }
-
-    label {
-        position: absolute;
-        height: 0;
-        width: 0;
-        margin: 0;
-        padding: 0;
-        clip: rect(0, 0, 0, 0);
-        overflow: hidden;
-        visibility: hidden;
-        pointer-events: none;
-
-    }
-
-    input {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 20px;
-        border-width: 0;
-        border-radius: 20px;
-        font-size: 20px;
-        background-color: $color-steel-blue;
-
-        &:focus {
-            outline-color: $color-dark-gunmetal;
-        }
-    }
-
-    a,
-    input::placeholder {
-        font-size: 20px;
-        color: white;
-    }
-
-    .container {
-        margin: 0 auto;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-
-        >.row {
-            padding: 20px;
-            box-sizing: border-box;
-
-            &.two-columns {
-                width: 631px;
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                column-gap: 16px;
-                gap: 20px;
-            }
-        }
-
-        .login-container,
-        .register-container {
-            border-radius: 25px;
-        }
-
-        .login-container {
-            background-color: $color-eternity;
-
-            legend {
-                color: $color-inchworm;
-            }
-
-            input {
-                color:white;
-            }
-
-            .forgot-password {
-                padding-left: 3px;
-                color: $color-orangered;
-            }
-        }
-
-        .register-container {
-            background-color: $color-inchworm;
-
-            legend {
-                color: $color-eternity;
-            }
-
-            input {
-                color: white;
-            }
-        }
-    }
-}
-
-// PAGE: DASHBOARD
-.page-title {
-    &.dashboard {
-        height: 0;
-        visibility: hidden;
-    
-        & + main {
-            color: white;
-        }
-    }
-}
-
-// PAGE: 404
-div[class="page-title 404"] {
-    color: $color-inchworm;
-    text-align: center;
-    margin-top: 20vh;
-
-    & + section {
-        color: white;
-
-        a {
-            padding: 20px;
-            border-radius: 20px;
-            font-size: 14px;
-            text-decoration: none;
-        }
-    }
-    
-    > h1 {
-        font-size: 150px;
-    }
-}
-
-
-// FOOTER
 
 footer {
     color: $color-inchworm;
