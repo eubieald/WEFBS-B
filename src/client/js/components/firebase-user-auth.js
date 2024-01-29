@@ -105,37 +105,26 @@ function authenticateUser(email, password) {
       const { success, user, error } = await loginUser(email, password);
 
       if (success) {
-        // Send the ID token to the server for verification
-        user
-          .getIdToken()
-          .then((idToken) => {
-            // Add the ID token to the request
-            const loginPostResponse = fetch("/login", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                // "X-CSRF-Token": csrfToken, // Add the CSRF token
-              },
-              body: JSON.stringify({ idToken }),
-            });
+        const idToken = await user.getIdToken();
+        const loginPostResponse = await fetch("/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // "X-CSRF-Token": csrfToken, // Add the CSRF token
+          },
+          body: JSON.stringify({ idToken })
+        });
 
-            if (loginPostResponse) {
-              window.history.replaceState(null, null, "/dashboard");
-              window.location.replace("/dashboard");
-              resolve("Authentication successful");
-            } else {
-              showToastNotification(error, "error");
-              reject(error);
-            }
-          })
-          .catch((error) => {
-            showToastNotification(error, "error");
-            reject(error);
-          });
+        if (loginPostResponse.ok) {
+          resolve("Login successful");
+        }
+
       } else {
+        showToastNotification(error, "error");
         return reject(error);
       }
     } catch (error) {
+      showToastNotification(error, "error");
       return reject(error);
     }
   });
