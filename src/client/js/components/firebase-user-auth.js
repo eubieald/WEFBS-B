@@ -17,8 +17,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const email = registrationForm.email.value,
         password = registrationForm.password.value,
-        name = registrationForm.name.value,
-        registeredUser = await registerUser(email, password, name);
+        name = registrationForm.name.value;
+
+      if (!name) {
+        showToastNotification("Name field is required", "error");
+        return;
+      }
+
+      const registeredUser = await registerUser(email, password, name);
 
       if (registeredUser.displayName) {
         showToastNotification(
@@ -68,7 +74,19 @@ forgotPasswordEl.addEventListener("click", async (e) => {
   e.preventDefault();
   const loginForm = document.querySelector("#login-form"),
     email = loginForm.email.value;
-    await resetUserPassword(email);
+
+  try {
+    const response = await resetUserPassword(email);
+
+    if (response.success) {
+      showToastNotification(response.message, "success");
+    } else {
+      const errorMessage = response.errorMessage;
+      showToastNotification(errorMessage, "error");
+    }
+  } catch (error) {
+    throw error;
+  }
 });
 
 // FUNCTIONS
@@ -84,30 +102,41 @@ function authenticateUser(email, password) {
   return new Promise(async (resolve, reject) => {
     try {
       // Use Firebase Authentication to sign in and get the ID token
-      const loggedinUser = await loginUser(email, password);
-      const idToken = await loggedinUser.getIdToken();
+      const { success, user, error } = await loginUser(email, password);
 
-      // Send the ID token to the server for verification
-      const response = await fetch("/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // "X-CSRF-Token": csrfToken, // Add the CSRF token
-        },
-        body: JSON.stringify({ idToken }),
-      });
+      if (success) {
+        // Send the ID token to the server for verification
+        user
+          .getIdToken()
+          .then((idToken) => {
+            // Add the ID token to the request
+            const loginPostResponse = fetch("/login", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                // "X-CSRF-Token": csrfToken, // Add the CSRF token
+              },
+              body: JSON.stringify({ idToken }),
+            });
 
-      if (response.ok) {
-        window.history.replaceState(null, null, "/dashboard");
-        window.location.replace("/dashboard");
-        resolve("Authentication successful");
+            if (loginPostResponse) {
+              window.history.replaceState(null, null, "/dashboard");
+              window.location.replace("/dashboard");
+              resolve("Authentication successful");
+            } else {
+              showToastNotification(error, "error");
+              reject(error);
+            }
+          })
+          .catch((error) => {
+            showToastNotification(error, "error");
+            reject(error);
+          });
       } else {
-        showToastNotification("Authentication failed", "error");
-        reject("Authentication failed");
+        return reject(error);
       }
     } catch (error) {
-      showToastNotification(error, "error");
-      reject(error);
+      return reject(error);
     }
   });
 }

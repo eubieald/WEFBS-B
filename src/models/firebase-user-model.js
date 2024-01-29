@@ -40,39 +40,28 @@ export const registerUser = async (email, password, name) => {
   }
 };
 
-/**
- * Asynchronously logs in a user with the given email and password.
- *
- * @param {string} email - The user's email address
- * @param {string} password - The user's password
- * @return {Promise<User>} The logged in user
- */
+
 export const loginUser = async (email, password) => {
   try {
-    const response = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    return response.user;
+    const response = await signInWithEmailAndPassword(auth, email, password);
+    const user = response.user;
+    return { success: true, user };
   } catch (error) {
     error = getErrorMessage(error);
-    showToastNotification(error, "error");
-    throw error;
+    return { success: false, error };
   }
 };
 
 export const resetUserPassword = async (email) => {
-  sendPasswordResetEmail(auth, email)
-    .then(() => {
-      showToastNotification("Password reset email sent", "success");
-    })
-    .catch((error) => {
-      error = getErrorMessage(error);
-      showToastNotification(error, "error");
-      throw error;
-    })
-}
+  try {
+    await sendPasswordResetEmail(auth, email);
+    // Password reset email sent successfully
+    return { success: true, message: "Password reset email sent successfully" };
+  } catch (error) {
+    // Return the error explicitly
+    return { success: false, error, errorMessage: getErrorMessage(error) };
+  }
+};
 
 /**
  * Get error message from Firebase error or return the error itself.

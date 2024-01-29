@@ -68,10 +68,16 @@ const dashboard_get = (req, res) => {
   res.setHeader("Cache-Control", "no-store", "must-revalidate", "private");
 
   const { email, name } = req.session.user;
-  res.render("dashboard", {
-    title: "Dashboard",
-    user: { email, name, avatar: name[0] },
-  });
+  if (email && name) {
+    res.render("dashboard", {
+      title: "Dashboard",
+      user: { email, name, avatar: name[0] },
+    });
+  } else {
+    // redirect to index page with error
+    res.redirect("/?error=Authentication failed");
+  }
+  
 };
 
 /**
