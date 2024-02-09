@@ -36,6 +36,8 @@ Scroll down to the "Firebase Admin SDK" section.
 Click on the "Generate new private key" button. This will download a JSON file containing your service account credentials.
 This JSON file contains sensitive information, such as private keys, so make sure to keep it secure and do not expose it in public repositories.
 
+## Demo Site:
+https://wefbs-boilerplate.onrender.com/
 
 ## Screenshots:
 
